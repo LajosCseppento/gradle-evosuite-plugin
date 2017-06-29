@@ -19,6 +19,7 @@ apply plugin: 'java-gradle-plugin'
 
 apply from: "${project.rootDir}/gradle/artifacts.gradle"
 apply from: "${project.rootDir}/gradle/testing.gradle"
+apply from: "${project.rootDir}/gradle/ide.gradle"
 
 project.sourceCompatibility = 1.8
 project.targetCompatibility = 1.8

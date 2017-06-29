@@ -1,0 +1,26 @@
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+
+eclipse {
+    classpath {
+        plusConfigurations += [configurations.testHelperCompile]
+        plusConfigurations += [configurations.integrationTestCompile]
+        plusConfigurations += [configurations.functionalTestCompile]
+    }
+}
+
+idea {
+    module {
+        testSourceDirs += project.sourceSets.testHelper.allSource.srcDirs
+        scopes.TEST.plus += [configurations.testHelperCompile]
+
+        testSourceDirs += project.sourceSets.integrationTest.allSource.srcDirs
+        scopes.TEST.plus += [configurations.integrationTestCompile]
+
+        testSourceDirs += project.sourceSets.functionalTest.allSource.srcDirs
+        scopes.TEST.plus += [configurations.functionalTestCompile]
+    }
+}
+
+tasks.eclipse.dependsOn tasks.cleanEclipse
+tasks.idea.dependsOn tasks.cleanIdea
