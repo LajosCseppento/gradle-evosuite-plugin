@@ -1,0 +1,17 @@
+buildscript {
+    gradle.ext.buildScriptDeps(it, 'com.gradle:build-scan-plugin:1.8')
+}
+
+apply plugin: com.gradle.scan.plugin.BuildScanPlugin
+
+buildScan {
+    licenseAgreementUrl = 'https://gradle.com/terms-of-service'
+    licenseAgree = 'yes'
+
+    if (System.getenv('CI')) {
+        tag 'CI'
+        publishAlways()
+    } else {
+        tag 'Local'
+    }
+}

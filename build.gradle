@@ -13,6 +13,8 @@ buildscript {
 project.group = 'com.github.cseppento'
 project.version = '0.1-SNAPSHOT'
 
+apply from: "${project.rootDir}/gradle/build-scan.gradle"
+
 apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'java-gradle-plugin'
