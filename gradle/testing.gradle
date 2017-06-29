@@ -1,3 +1,9 @@
+apply plugin: 'jacoco'
+
+jacoco {
+    toolVersion = '0.7.9'
+}
+
 sourceSets {
     // Test helper classes use test dependencies
     testHelper {
@@ -26,6 +32,11 @@ sourceSets {
     }
 }
 
+test {
+    jacoco {
+        enabled = true
+    }
+}
 
 task integrationTest(type: Test) {
     group = 'Verification'
@@ -45,7 +56,17 @@ task functionalTest(type: Test) {
 
     mustRunAfter tasks.test
     mustRunAfter tasks.integrationTest
+
+    jacoco {
+        enabled = false
+    }
 }
 
 check.dependsOn integrationTest
 check.dependsOn functionalTest
+
+jacocoTestReport {
+    reports {
+        html.enabled true
+    }
+}

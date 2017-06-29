@@ -1,0 +1,35 @@
+buildscript {
+    gradle.ext.buildScriptDeps(it, 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.5')
+}
+
+apply plugin: org.sonarqube.gradle.SonarQubePlugin
+
+sonarqube {
+    properties {
+        property 'sonar.sourceEncoding', 'UTF-8'
+
+        ['testHelper', 'integrationTest', 'functionalTest']
+                .collectMany { sourceSets[it].allSource.srcDirs }
+                .findAll { it.exists() } // sonarqube fails if a source set dir does not exists (e.g., resources)
+                .each { properties['sonar.tests'] += it }
+
+        property 'sonar.jacoco.reportPaths', [
+                tasks.test.jacoco.destinationFile,
+                tasks.integrationTest.jacoco.destinationFile
+        ]
+    }
+}
+
+tasks.sonarqube.dependsOn tasks.check
+
+if (System.getenv('CI')) {
+    tasks.sonarqube.doFirst {
+        throw new GradleException('TODO SonarQube analysis on CI')
+    }
+} else {
+    sonarqube {
+        properties {
+            property 'sonar.host.url', 'http://localhost:32768'
+        }
+    }
+}
