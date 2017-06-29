@@ -1,0 +1,53 @@
+buildscript {
+    gradle.ext.buildScriptDeps = { ScriptHandler sh, Object... deps ->
+        sh.repositories {
+            maven { url 'https://plugins.gradle.org/m2/' }
+        }
+
+        sh.dependencies {
+            deps.each { dep -> classpath(dep) }
+        }
+    }
+}
+
+project.group = 'com.github.cseppento'
+project.version = '0.1-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'groovy'
+apply plugin: 'java-gradle-plugin'
+
+apply from: "${project.rootDir}/gradle/artifacts.gradle"
+apply from: "${project.rootDir}/gradle/testing.gradle"
+
+project.sourceCompatibility = 1.8
+project.targetCompatibility = 1.8
+
+compileJava { options.encoding = 'UTF-8' }
+javadoc { options.encoding = 'UTF-8' }
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile gradleApi()
+    testCompile 'junit:junit:4.+'
+    testCompile 'org.hamcrest:hamcrest-all:1.+'
+    testCompile 'org.mockito:mockito-core:2.+'
+
+    functionalTestCompile localGroovy()
+    functionalTestCompile('org.spockframework:spock-core:1.1-groovy-2.4') {
+        exclude group: 'org.codehaus.groovy', module: 'groovy-all'
+    }
+}
+
+gradlePlugin {
+    plugins {
+        evosuite {
+            id = 'com.github.cseppento.evosuite'
+            implementationClass = 'com.github.cseppento.gradle.evosuite.EvoSuiteGradlePlugin'
+        }
+    }
+    testSourceSets sourceSets.functionalTest
+}
