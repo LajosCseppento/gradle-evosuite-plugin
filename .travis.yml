@@ -1,12 +1,17 @@
 language: java
 
+addons:
+  sonarcloud:
+    organization: "cseppento-github"
+
 jdk:
   - oraclejdk8
 
 script:
-  - ./gradlew build -s --scan
+  - ./gradlew build sonarqube -s --scan
 
 cache:
   directories:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
+    - $HOME/.sonar/cache/
