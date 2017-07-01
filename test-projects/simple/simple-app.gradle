@@ -1,0 +1,7 @@
+apply plugin: 'application'
+
+mainClassName = 'com.github.cseppento.gradle.evosuite.testprojects.simple.SimpleApp'
+
+run {
+    standardInput = System.in
+}

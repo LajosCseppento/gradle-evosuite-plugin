@@ -1,0 +1,22 @@
+allprojects {
+    apply plugin: 'eclipse'
+    apply plugin: 'idea'
+
+    project.group = 'com.github.cseppento.gradle.evosuite.test-projects'
+    project.version = 'TEST'
+
+    tasks.eclipse.dependsOn tasks.cleanEclipse
+    tasks.idea.dependsOn tasks.cleanIdea
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'application'
+
+    repositories {
+        mavenCentral()
+    }
+
+    apply from: "${project.name}-deps.gradle"
+    apply from: "${project.name}-app.gradle"
+}

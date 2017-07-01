@@ -1,0 +1,4 @@
+include 'simple'
+include 'duckduckgo'
+
+rootProject.name = 'test-projects'
