@@ -6,6 +6,16 @@ eclipse {
         plusConfigurations += [configurations.testHelperCompile]
         plusConfigurations += [configurations.integrationTestCompile]
         plusConfigurations += [configurations.functionalTestCompile]
+
+        // Eclipse does not distinguish source code dir from resource dir
+        // anyway, functional tests are only executed with Gradle
+        file.withXml { XmlProvider xml ->
+            Node rootNode = xml.asNode()
+            Node testProjectsCpe = xml.asNode().classpathentry.find { cpe -> cpe.@path == 'test-projects' }
+            if (testProjectsCpe) {
+                rootNode.remove(testProjectsCpe)
+            }
+        }
     }
 }
 
@@ -19,6 +29,10 @@ idea {
 
         testSourceDirs += project.sourceSets.functionalTest.allSource.srcDirs
         scopes.TEST.plus += [configurations.functionalTestCompile]
+
+        // IDEA does not distinguish source code dir from resource dir
+        // anyway, functional tests are only executed with Gradle
+        excludeDirs += file('test-projects')
     }
 }
 
