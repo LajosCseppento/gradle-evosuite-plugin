@@ -29,7 +29,7 @@ sourceSets {
     functionalTest {
         java.srcDirs = ['src/functTest/java']
         groovy.srcDirs = ['src/functTest/groovy']
-        resources.srcDirs = ['src/functTest/resources']
+        resources.srcDirs = ['src/functTest/resources', 'test-projects']
 
         compileClasspath += sourceSets.main.output + sourceSets.testHelper.output + configurations.testRuntime
         runtimeClasspath += output + compileClasspath
