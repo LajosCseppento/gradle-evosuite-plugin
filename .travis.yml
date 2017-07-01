@@ -9,7 +9,7 @@ jdk:
 
 script:
   # check that test-projects are valid before building the plugin
-  - cd test-projects && ../gradlew build -s
+  - ./gradlew --project-dir test-projects build -s
   - ./gradlew build sonarqube -s --scan
 
 cache:
