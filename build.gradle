@@ -39,6 +39,7 @@ dependencies {
     testCompile 'junit:junit:4.+'
     testCompile 'org.hamcrest:hamcrest-all:1.+'
     testCompile 'org.mockito:mockito-core:2.+'
+    testCompile 'com.google.guava:guava:22.0'
 
     functionalTestCompile localGroovy()
     functionalTestCompile('org.spockframework:spock-core:1.1-groovy-2.4') {
