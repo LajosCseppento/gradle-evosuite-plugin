@@ -18,7 +18,8 @@ class TestGenerationSmokeTest extends Specification {
     BuildResult result
 
     def setup() {
-        new TestProject('simple').copyTo(tmpDir.root.toPath())
+        new TestProject('simple').copyWithoutGeneratedTests(tmpDir.root.toPath())
+
         buildFile = tmpDir.newFile('build.gradle')
         buildFile << '''
             plugins {
@@ -26,9 +27,7 @@ class TestGenerationSmokeTest extends Specification {
                 id 'com.github.cseppento.evosuite'
             }
             
-            repositories {
-                mavenCentral()
-            }
+            repositories { mavenCentral() }
             
             tasks.evosuiteGenerateTests {
                 args '-Dsearch_budget=3', '-Dstopping_condition=MaxTime',

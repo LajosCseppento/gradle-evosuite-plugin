@@ -44,7 +44,15 @@ public class TestProject {
         }
     }
 
-    public void copyTo(Path target) throws IOException {
+    public void copyWithGeneratedTests(Path target) throws IOException {
+        copy(target, true);
+    }
+
+    public void copyWithoutGeneratedTests(Path target) throws IOException {
+        copy(target, false);
+    }
+
+    private void copy(Path target, boolean includeGeneratedTests) throws IOException {
         Objects.requireNonNull(target);
         Preconditions.checkArgument(!Files.exists(target) || Files.isDirectory(target),
                 "The target already exists and it is not a directory: %s", target);
@@ -55,6 +63,9 @@ public class TestProject {
                 String name = dir.getFileName().toString();
                 if (name.startsWith(".") || name.equals("bin") || name.equals("build") || name.equals("out")) {
                     // ignore hidden and build dirs
+                    return FileVisitResult.SKIP_SUBTREE;
+                } else if (!includeGeneratedTests && (name.equals("evoTest") || name.equals("evosuite-report"))) {
+                    // ignore formerly generated tests if present
                     return FileVisitResult.SKIP_SUBTREE;
                 } else {
                     Files.createDirectories(target.resolve(projectDir.relativize(dir)));
