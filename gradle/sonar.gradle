@@ -11,6 +11,7 @@ sonarqube {
         ['testHelper', 'integrationTest', 'functionalTest']
                 .collectMany { sourceSets[it].allSource.srcDirs }
                 .findAll { it.exists() } // sonarqube fails if a source set dir does not exists (e.g., resources)
+                .findAll { it.name != 'test-projects' } // don't list test project files (resource of functionalTest)
                 .each { properties['sonar.tests'] += it }
 
         property 'sonar.jacoco.reportPaths', [
