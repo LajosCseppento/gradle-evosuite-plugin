@@ -1,3 +1,34 @@
+buildscript {
+    File libsDir = file('../build/libs')
+    List<File> candidates;
+
+    if (libsDir.exists()) {
+        candidates = libsDir.listFiles().findAll { File f ->
+            f.name.startsWith('gradle-evosuite-plugin') && f.name.endsWith('.jar') &&
+                    !f.name.endsWith('-javadoc.jar') && !f.name.endsWith('-sources.jar')
+        }
+    } else {
+        candidates = []
+    }
+
+    if (candidates.size() == 1) {
+        gradle.ext.evosuitePluginIsAvailable = true
+        logger.quiet('Using localy built gradle-evosuite-plugin: {}', candidates[0].name)
+
+        dependencies {
+            classpath files(candidates[0])
+        }
+    } else {
+        gradle.ext.evosuitePluginIsAvailable = false
+
+        if (candidates.size() == 0) {
+            logger.warn('The gradle-evosuite-plugin is not built, EvoSuite-related configuration is skipped')
+        } else {
+            logger.warn('Expected only one gradle-evosuite-plugin JAR, but found several: {}. EvoSuite-related configuration is skipped', candidates*.name)
+        }
+    }
+}
+
 allprojects {
     apply plugin: 'eclipse'
     apply plugin: 'idea'
@@ -12,6 +43,9 @@ allprojects {
 subprojects {
     apply plugin: 'java'
     apply plugin: 'application'
+    if (gradle.ext.evosuitePluginIsAvailable) {
+        apply plugin: 'com.github.cseppento.evosuite'
+    }
 
     repositories {
         mavenCentral()
