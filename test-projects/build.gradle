@@ -24,7 +24,7 @@ buildscript {
         if (candidates.size() == 0) {
             logger.warn('The gradle-evosuite-plugin is not built, EvoSuite-related configuration is skipped')
         } else {
-            logger.warn('Expected only one gradle-evosuite-plugin JAR, but found several: {}. EvoSuite-related configuration is skipped', candidates*.name)
+            throw new GradleException('Expected only one gradle-evosuite-plugin JAR, but found several: ' + candidates*.name)
         }
     }
 }
