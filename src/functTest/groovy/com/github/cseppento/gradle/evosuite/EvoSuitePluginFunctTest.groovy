@@ -6,7 +6,7 @@ import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 import spock.lang.Specification
 
-class EvoSuiteGradlePluginFunctTest extends Specification {
+class EvoSuitePluginFunctTest extends Specification {
     @Rule
     TemporaryFolder tmpDir = new TemporaryFolder()
     File buildFile

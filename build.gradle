@@ -8,12 +8,20 @@ buildscript {
             deps.each { dep -> classpath(dep) }
         }
     }
+
+    gradle.ext.buildScriptDeps(it, 'org.ajoberstar:gradle-git:1.7.2')
 }
 
 project.group = 'com.github.cseppento'
 project.version = '0.1-SNAPSHOT'
 
 apply from: "${project.rootDir}/gradle/build-scan.gradle"
+
+apply plugin: 'org.ajoberstar.grgit'
+project.ext.currentVcsBranch = grgit.branch.current.fullName.replaceFirst('refs/heads/', '')
+if (currentVcsBranch != 'master' && currentVcsBranch != 'develop') {
+    project.version += '-' + currentVcsBranch.replace('/', '-')
+}
 
 apply plugin: 'java'
 apply plugin: 'groovy'
@@ -39,6 +47,7 @@ dependencies {
     testCompile 'junit:junit:4.+'
     testCompile 'org.hamcrest:hamcrest-all:1.+'
     testCompile 'org.mockito:mockito-core:2.+'
+    testCompile 'com.google.guava:guava:22.0'
 
     functionalTestCompile localGroovy()
     functionalTestCompile('org.spockframework:spock-core:1.1-groovy-2.4') {
@@ -50,7 +59,7 @@ gradlePlugin {
     plugins {
         evosuite {
             id = 'com.github.cseppento.evosuite'
-            implementationClass = 'com.github.cseppento.gradle.evosuite.EvoSuiteGradlePlugin'
+            implementationClass = 'com.github.cseppento.gradle.evosuite.EvoSuitePlugin'
         }
     }
     testSourceSets sourceSets.functionalTest

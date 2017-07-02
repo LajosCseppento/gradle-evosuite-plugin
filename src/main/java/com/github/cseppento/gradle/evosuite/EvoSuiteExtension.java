@@ -1,9 +1,9 @@
 package com.github.cseppento.gradle.evosuite;
 
 /**
- * This extension allows the user to configure the {@link EvoSuiteGradlePlugin}.
+ * This extension allows the user to configure the {@link EvoSuitePlugin}.
  */
-public interface EvoSuiteGradleExtension {
+public interface EvoSuiteExtension {
     /**
      * @return Version of EvoSuite to use
      */

@@ -1,15 +1,13 @@
 package com.github.cseppento.gradle.evosuite;
 
-import com.github.cseppento.gradle.evosuite.internal.DefaultEvoSuiteGradleExtension;
+import com.github.cseppento.gradle.evosuite.internal.DefaultEvoSuiteExtension;
 import org.gradle.api.GradleException;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.logging.Logger;
 import org.gradle.api.plugins.JavaPluginConvention;
-import org.gradle.api.tasks.SourceSet;
-import org.gradle.api.tasks.SourceSetContainer;
-import org.gradle.api.tasks.SourceSetOutput;
+import org.gradle.api.tasks.*;
 import org.gradle.api.tasks.testing.Test;
 
 import java.util.Objects;
@@ -17,7 +15,7 @@ import java.util.Objects;
 /**
  * This plugin integrates EvoSuite test generation and execution with Gradle.
  */
-public class EvoSuiteGradlePlugin implements Plugin<Project> {
+public class EvoSuitePlugin implements Plugin<Project> {
     private static final String DEFAULT_TOOL_VERSION = "1.0.5";
 
     private static final String EXTENSION_NAME = "evosuite";
@@ -27,14 +25,20 @@ public class EvoSuiteGradlePlugin implements Plugin<Project> {
 
     private Project project;
     private Logger logger;
+    private TaskContainer tasks;
+    private SourceSetContainer sourceSets;
+
+    private EvoSuiteExtension extension;
+    private Configuration evosuiteGenerateConfig;
+
     private SourceSet sourceSet;
-    private EvoSuiteGradleExtension extension;
 
     @Override
     public void apply(Project project) {
         Objects.requireNonNull(project);
         this.project = project;
         this.logger = project.getLogger();
+        this.tasks = project.getTasks();
 
         if (project.getExtensions().findByName(EXTENSION_NAME) != null) {
             logger.info("The {] extension has been already applied", EXTENSION_NAME);
@@ -44,23 +48,29 @@ public class EvoSuiteGradlePlugin implements Plugin<Project> {
             throw new GradleException("Please apply the java plugin first in order to use the EvoSuite plugin");
         }
 
+        this.sourceSets = project.getConvention().getPlugin(JavaPluginConvention.class).getSourceSets();
+
         extension = project.getExtensions().create(
-                EvoSuiteGradleExtension.class, EXTENSION_NAME, DefaultEvoSuiteGradleExtension.class,
+                EvoSuiteExtension.class, EXTENSION_NAME, DefaultEvoSuiteExtension.class,
                 project, DEFAULT_TOOL_VERSION);
 
-        Configuration config = project.getConfigurations().create(TEST_GENERATION_CONFIG_NAME);
-        // TODO Add EvoSuite dependency, replace if version is updated in the extension
-        //  project.getDependencies().add(TEST_GENERATION_CONFIG_NAME, "");
+        evosuiteGenerateConfig = project.getConfigurations().create(TEST_GENERATION_CONFIG_NAME);
+        evosuiteGenerateConfig.defaultDependencies(depSet -> {
+            depSet.add(project.getDependencies().create("org.evosuite:evosuite-master:" + extension.getToolVersion()));
+        });
 
         createSourceSet();
+
         createTasks();
+
+        project.getConfigurations().getByName(sourceSet.getCompileConfigurationName()).defaultDependencies(depSet -> {
+            depSet.add(project.getDependencies().create("org.evosuite:evosuite-client:" + extension.getToolVersion()));
+        });
 
         // TODO detect IDE plugins (even if applied later) and add sourceSet to IDE config
     }
 
     private void createSourceSet() {
-        SourceSetContainer sourceSets = project.getConvention().getPlugin(JavaPluginConvention.class).getSourceSets();
-
         sourceSet = sourceSets.create(SOURCE_SET_NAME);
 
         sourceSet.getJava().setSrcDirs(project.files(String.format("src/%s/java", SOURCE_SET_DIR_NAME)));
@@ -72,21 +82,33 @@ public class EvoSuiteGradlePlugin implements Plugin<Project> {
     }
 
     private void createTasks() {
-        // TODO Task evosuiteGen
         // TODO task evosuiteListClasses
         // TODO task evosuiteHelp
         // TODO task evosuiteParameters
 
+        // Task: evosuiteGenerateTests : JavaExec
+        JavaExec genTask = tasks.create("evosuiteGenerateTests", JavaExec.class);
+        genTask.setGroup("EvoSuite");
+        genTask.setDescription("Generates tests using EvoSuite.");
+        genTask.dependsOn(tasks.getByName("classes"));
+        genTask.setClasspath(evosuiteGenerateConfig);
+        genTask.setMain("org.evosuite.EvoSuite");
+
+        String projectClasspath = sourceSets.getByName(SourceSet.MAIN_SOURCE_SET_NAME).getOutput().getClassesDirs().getAsPath();
+        genTask.args("-target", projectClasspath,
+                "-projectCP", projectClasspath,
+                "-generateSuite",
+                "-Dtest_dir=" + sourceSet.getJava().getSrcDirs().iterator().next()
+        );
+
         // Task: evosuiteTest : Test
-        Test evosuiteTest = project.getTasks().create("evosuiteTest", Test.class);
+        Test evosuiteTest = tasks.create("evosuiteTest", Test.class);
         evosuiteTest.setGroup("EvoSuite");
         evosuiteTest.setDescription("Runs the tests generated by EvoSuite.");
 
         evosuiteTest.setTestClassesDirs(sourceSet.getOutput().getClassesDirs());
         evosuiteTest.setClasspath(sourceSet.getRuntimeClasspath());
 
-        evosuiteTest.mustRunAfter(project.getTasks().getByName("test"));
-
-        project.getTasks().getByName("check").dependsOn(evosuiteTest);
+        evosuiteTest.mustRunAfter(tasks.getByName("test"));
     }
 }

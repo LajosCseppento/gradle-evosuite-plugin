@@ -1,0 +1,4 @@
+TARGET_CLASS,criterion,Coverage,Total_Goals,Covered_Goals
+com.github.cseppento.gradle.evosuite.testprojects.simple.SimpleApp,LINE;BRANCH;EXCEPTION;WEAKMUTATION;OUTPUT;METHOD;METHODNOEXCEPTION;CBRANCH,0.8430867378235799,203,135
+com.github.cseppento.gradle.evosuite.testprojects.simple.SimpleObjectSut,LINE;BRANCH;EXCEPTION;WEAKMUTATION;OUTPUT;METHOD;METHODNOEXCEPTION;CBRANCH,0.8268588029617441,163,134
+com.github.cseppento.gradle.evosuite.testprojects.simple.SimpleStaticSut,LINE;BRANCH;EXCEPTION;WEAKMUTATION;OUTPUT;METHOD;METHODNOEXCEPTION;CBRANCH,0.9453703703703704,41,38

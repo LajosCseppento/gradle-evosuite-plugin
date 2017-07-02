@@ -1,11 +1,23 @@
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 
+// Note: Eclipse and IntelliJ IDEA do not distinguish source code dirs from resource dirs
+// Thus, the test-projects directory is excluded from both IDE configs
+// Anyway, functional tests are only executed with Gradle for now
+
 eclipse {
     classpath {
         plusConfigurations += [configurations.testHelperCompile]
         plusConfigurations += [configurations.integrationTestCompile]
         plusConfigurations += [configurations.functionalTestCompile]
+
+        file.withXml { XmlProvider xml ->
+            Node rootNode = xml.asNode()
+            Node testProjectsCpe = xml.asNode().classpathentry.find { cpe -> cpe.@path == 'test-projects' }
+            if (testProjectsCpe) {
+                rootNode.remove(testProjectsCpe)
+            }
+        }
     }
 }
 
@@ -19,6 +31,23 @@ idea {
 
         testSourceDirs += project.sourceSets.functionalTest.allSource.srcDirs
         scopes.TEST.plus += [configurations.functionalTestCompile]
+
+        excludeDirs += file('test-projects')
+
+        // The .iml would contain still test-projects both as source and excluded folder:
+        //   <sourceFolder url="file://$MODULE_DIR$/test-projects" isTestSource="true"/>
+        //   <excludeFolder url="file://$MODULE_DIR$/test-projects"/>
+        // This results in a behaviour that IntelliJ neither compiles nor copies the Java source files,
+        // but it still copies other resource files (which is an inconsistent state)
+        // Remove the corresponding sourceFolder entry
+        iml.withXml { XmlProvider xml ->
+            Node rootNode = xml.asNode()
+            Node contentNode = rootNode.component.content[0]
+            Node testProjectsExcl = contentNode.sourceFolder.find { sourceFolder -> sourceFolder.@url.endsWith('/test-projects') }
+            if (testProjectsExcl) {
+                contentNode.remove(testProjectsExcl)
+            }
+        }
     }
 }
 
