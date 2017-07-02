@@ -8,12 +8,20 @@ buildscript {
             deps.each { dep -> classpath(dep) }
         }
     }
+
+    gradle.ext.buildScriptDeps(it, 'org.ajoberstar:gradle-git:1.7.2')
 }
 
 project.group = 'com.github.cseppento'
 project.version = '0.1-SNAPSHOT'
 
 apply from: "${project.rootDir}/gradle/build-scan.gradle"
+
+apply plugin: 'org.ajoberstar.grgit'
+project.ext.currentVcsBranch = grgit.branch.current.fullName.replaceFirst('refs/heads/', '')
+if (currentVcsBranch != 'master' && currentVcsBranch != 'develop') {
+    project.version += '-' + currentVcsBranch.replace('/', '-')
+}
 
 apply plugin: 'java'
 apply plugin: 'groovy'
