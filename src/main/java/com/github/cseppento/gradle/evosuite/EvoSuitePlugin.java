@@ -110,7 +110,5 @@ public class EvoSuitePlugin implements Plugin<Project> {
         evosuiteTest.setClasspath(sourceSet.getRuntimeClasspath());
 
         evosuiteTest.mustRunAfter(tasks.getByName("test"));
-
-        tasks.getByName("check").dependsOn(evosuiteTest);
     }
 }
