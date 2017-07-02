@@ -28,6 +28,12 @@ class TestExecutionSmokeTest extends Specification {
             }
             
             repositories { mavenCentral() }
+            
+            tasks.withType(Test) {
+                testLogging {
+                    exceptionFormat = 'full'
+                }
+            }
             '''
 
         println '== Test case: ' + this.specificationContext.currentIteration.name
