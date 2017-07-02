@@ -1,0 +1,5 @@
+TARGET_CLASS,criterion,Coverage,Total_Goals,Covered_Goals
+com.github.cseppento.gradle.evosuite.testprojects.duckduckgo.DuckDuckGoAnswer,LINE;BRANCH;EXCEPTION;WEAKMUTATION;OUTPUT;METHOD;METHODNOEXCEPTION;CBRANCH,0.9722222222222222,44,42
+com.github.cseppento.gradle.evosuite.testprojects.duckduckgo.DuckDuckGoApp,LINE;BRANCH;EXCEPTION;WEAKMUTATION;OUTPUT;METHOD;METHODNOEXCEPTION;CBRANCH,0.7349358974358974,67,47
+com.github.cseppento.gradle.evosuite.testprojects.duckduckgo.DuckDuckGoAppException,LINE;BRANCH;EXCEPTION;WEAKMUTATION;OUTPUT;METHOD;METHODNOEXCEPTION;CBRANCH,1.0,6,6
+com.github.cseppento.gradle.evosuite.testprojects.duckduckgo.DuckDuckGoClientException,LINE;BRANCH;EXCEPTION;WEAKMUTATION;OUTPUT;METHOD;METHODNOEXCEPTION;CBRANCH,1.0,6,6
