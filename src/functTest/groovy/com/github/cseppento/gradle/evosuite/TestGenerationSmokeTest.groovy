@@ -36,7 +36,7 @@ class TestGenerationSmokeTest extends Specification {
             }
             '''
 
-        println '== Test case: ' + this.specificationContext.current.name
+        println '== Test case: ' + this.specificationContext.currentIteration.name
         println '== Files before execution:'
         tmpDir.root.eachFileRecurse(FileType.FILES) { println it }
         println ''
