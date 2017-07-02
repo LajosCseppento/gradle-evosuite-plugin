@@ -59,7 +59,7 @@ gradlePlugin {
     plugins {
         evosuite {
             id = 'com.github.cseppento.evosuite'
-            implementationClass = 'com.github.cseppento.gradle.evosuite.EvoSuiteGradlePlugin'
+            implementationClass = 'com.github.cseppento.gradle.evosuite.EvoSuitePlugin'
         }
     }
     testSourceSets sourceSets.functionalTest

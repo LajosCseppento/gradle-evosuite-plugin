@@ -1,6 +1,6 @@
 package com.github.cseppento.gradle.evosuite;
 
-import com.github.cseppento.gradle.evosuite.internal.DefaultEvoSuiteGradleExtension;
+import com.github.cseppento.gradle.evosuite.internal.DefaultEvoSuiteExtension;
 import org.gradle.api.GradleException;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
@@ -15,7 +15,7 @@ import java.util.Objects;
 /**
  * This plugin integrates EvoSuite test generation and execution with Gradle.
  */
-public class EvoSuiteGradlePlugin implements Plugin<Project> {
+public class EvoSuitePlugin implements Plugin<Project> {
     private static final String DEFAULT_TOOL_VERSION = "1.0.5";
 
     private static final String EXTENSION_NAME = "evosuite";
@@ -28,7 +28,7 @@ public class EvoSuiteGradlePlugin implements Plugin<Project> {
     private TaskContainer tasks;
     private SourceSetContainer sourceSets;
 
-    private EvoSuiteGradleExtension extension;
+    private EvoSuiteExtension extension;
     private Configuration evosuiteGenerateConfig;
 
     private SourceSet sourceSet;
@@ -51,7 +51,7 @@ public class EvoSuiteGradlePlugin implements Plugin<Project> {
         this.sourceSets = project.getConvention().getPlugin(JavaPluginConvention.class).getSourceSets();
 
         extension = project.getExtensions().create(
-                EvoSuiteGradleExtension.class, EXTENSION_NAME, DefaultEvoSuiteGradleExtension.class,
+                EvoSuiteExtension.class, EXTENSION_NAME, DefaultEvoSuiteExtension.class,
                 project, DEFAULT_TOOL_VERSION);
 
         evosuiteGenerateConfig = project.getConfigurations().create(TEST_GENERATION_CONFIG_NAME);

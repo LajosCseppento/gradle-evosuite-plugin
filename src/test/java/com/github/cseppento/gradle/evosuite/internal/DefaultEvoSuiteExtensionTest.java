@@ -11,16 +11,16 @@ import org.mockito.junit.MockitoJUnitRunner;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(MockitoJUnitRunner.class)
-public class DefaultEvoSuiteGradleExtensionTest {
+public class DefaultEvoSuiteExtensionTest {
     @Mock
     private Project project;
 
-    private DefaultEvoSuiteGradleExtension sut;
+    private DefaultEvoSuiteExtension sut;
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        sut = new DefaultEvoSuiteGradleExtension(project, "DEFAULT_VER");
+        sut = new DefaultEvoSuiteExtension(project, "DEFAULT_VER");
     }
 
     @Test

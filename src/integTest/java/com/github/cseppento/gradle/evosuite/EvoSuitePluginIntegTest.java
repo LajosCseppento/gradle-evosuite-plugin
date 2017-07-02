@@ -2,7 +2,6 @@ package com.github.cseppento.gradle.evosuite;
 
 import org.gradle.api.GradleException;
 import org.gradle.api.Project;
-import org.gradle.api.file.SourceDirectorySet;
 import org.gradle.api.internal.plugins.PluginApplicationException;
 import org.gradle.api.plugins.JavaPlugin;
 import org.gradle.api.tasks.SourceSet;
@@ -24,7 +23,7 @@ import static com.github.cseppento.gradle.evosuite.testhelper.ExceptionMessageMa
 import static org.hamcrest.CoreMatchers.isA;
 import static org.junit.Assert.assertEquals;
 
-public class EvoSuiteGradlePluginIntegTest {
+public class EvoSuitePluginIntegTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
@@ -40,7 +39,7 @@ public class EvoSuiteGradlePluginIntegTest {
     @Test
     public void testSourceSets() {
         project.getPluginManager().apply(JavaPlugin.class);
-        project.getPluginManager().apply(EvoSuiteGradlePlugin.class);
+        project.getPluginManager().apply(EvoSuitePlugin.class);
 
         SourceSetContainer sourceSets = (SourceSetContainer) project.property("sourceSets");
         SourceSet sourceSet = sourceSets.getByName("evosuiteTest");
@@ -64,7 +63,7 @@ public class EvoSuiteGradlePluginIntegTest {
         thrown.expectCause(isA(GradleException.class));
         thrown.expectCause(messageContainsString("Please apply the java plugin first in order to use the EvoSuite plugin"));
 
-        project.getPluginManager().apply(EvoSuiteGradlePlugin.class);
+        project.getPluginManager().apply(EvoSuitePlugin.class);
     }
 
     private Set<Path> toRelPaths(Set<File> files) {
