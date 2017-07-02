@@ -88,6 +88,8 @@ public class EvoSuitePlugin implements Plugin<Project> {
 
         // Task: evosuiteGenerateTests : JavaExec
         JavaExec genTask = tasks.create("evosuiteGenerateTests", JavaExec.class);
+        genTask.setGroup("EvoSuite");
+        genTask.setDescription("Generates tests using EvoSuite.");
         genTask.dependsOn(tasks.getByName("classes"));
         genTask.setClasspath(evosuiteGenerateConfig);
         genTask.setMain("org.evosuite.EvoSuite");
