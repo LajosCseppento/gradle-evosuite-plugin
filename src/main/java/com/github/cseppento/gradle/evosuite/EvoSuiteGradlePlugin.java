@@ -58,11 +58,14 @@ public class EvoSuiteGradlePlugin implements Plugin<Project> {
         evosuiteGenerateConfig.defaultDependencies(depSet -> {
             depSet.add(project.getDependencies().create("org.evosuite:evosuite-master:" + extension.getToolVersion()));
         });
-        // TODO Add EvoSuite dependency, replace if version is updated in the extension
-        //  project.getDependencies().add(TEST_GENERATION_CONFIG_NAME, "");
 
         createSourceSet();
+
         createTasks();
+
+        project.getConfigurations().getByName(sourceSet.getCompileConfigurationName()).defaultDependencies(depSet -> {
+            depSet.add(project.getDependencies().create("org.evosuite:evosuite-client:" + extension.getToolVersion()));
+        });
 
         // TODO detect IDE plugins (even if applied later) and add sourceSet to IDE config
     }
