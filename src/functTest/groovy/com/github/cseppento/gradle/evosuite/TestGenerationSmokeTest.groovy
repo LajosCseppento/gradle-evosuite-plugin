@@ -93,8 +93,6 @@ class TestGenerationSmokeTest extends Specification {
         assert Files.isDirectory(testTargetDir)
 
         classes.each { cls ->
-            assert result.output.contains('Generating tests for class ' + cls)
-
             String fileNameBase = cls.replace('.', '/') + '_ESTest'
             assert Files.isRegularFile(testTargetDir.resolve(fileNameBase + '.java'))
             assert Files.isRegularFile(testTargetDir.resolve(fileNameBase + '_scaffolding.java'))
