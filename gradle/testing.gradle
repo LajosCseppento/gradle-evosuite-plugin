@@ -66,6 +66,12 @@ task functionalTest(type: Test) {
     }
 }
 
+tasks.withType(Test) {
+    testLogging {
+        exceptionFormat = 'full'
+    }
+}
+
 check.dependsOn integrationTest
 check.dependsOn functionalTest
 
