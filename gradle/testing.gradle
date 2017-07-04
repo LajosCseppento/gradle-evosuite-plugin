@@ -76,7 +76,14 @@ check.dependsOn integrationTest
 check.dependsOn functionalTest
 
 jacocoTestReport {
+    // Add integration test coverage to overall coverage reports
+    executionData(integrationTest.jacoco.destinationFile)
+
     reports {
         html.enabled true
+        xml.enabled true
     }
 }
+
+tasks.jacocoTestReport.dependsOn tasks.test, tasks.integrationTest
+tasks.check.dependsOn tasks.jacocoTestReport

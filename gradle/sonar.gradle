@@ -6,10 +6,21 @@ apply plugin: org.sonarqube.gradle.SonarQubePlugin
 
 sonarqube {
     properties {
+        // CI sets sonar.host.url and other params
+        if (!System.getenv('CI')) {
+            property 'sonar.host.url', 'http://localhost:32768'
+        }
+
         property 'sonar.sourceEncoding', 'UTF-8'
         property 'sonar.branch', project.ext.currentVcsBranch
 
-        ['testHelper', 'integrationTest', 'functionalTest']
+        // Test helper code should follow the same guidelines as production code
+        ['testHelper']
+                .collectMany { sourceSets[it].allSource.srcDirs }
+                .findAll { it.exists() } // sonarqube fails if a source set dir does not exists (e.g., resources)
+                .each{ properties['sonar.sources'] += it }
+
+        ['integrationTest', 'functionalTest']
                 .collectMany { sourceSets[it].allSource.srcDirs }
                 .findAll { it.exists() } // sonarqube fails if a source set dir does not exists (e.g., resources)
                 .findAll { it.name != 'test-projects' } // don't list test project files (resource of functionalTest)
@@ -22,14 +33,4 @@ sonarqube {
     }
 }
 
-tasks.sonarqube.dependsOn tasks.check
-
-if (System.getenv('CI')) {
-    // CI sets sonar.host.url and other params
-} else {
-    sonarqube {
-        properties {
-            property 'sonar.host.url', 'http://localhost:32768'
-        }
-    }
-}
+tasks.sonarqube.dependsOn tasks.test, tasks.integrationTest
