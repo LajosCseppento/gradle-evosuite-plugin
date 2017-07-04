@@ -7,6 +7,7 @@ import org.gradle.api.GradleException;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
+import org.gradle.api.artifacts.Dependency;
 import org.gradle.api.logging.Logger;
 import org.gradle.api.plugins.JavaPluginConvention;
 import org.gradle.api.tasks.*;
@@ -59,7 +60,9 @@ public class EvoSuitePlugin implements Plugin<Project> {
 
         evosuiteGenerateConfig = project.getConfigurations().create(TEST_GENERATION_CONFIG_NAME);
         evosuiteGenerateConfig.defaultDependencies(depSet -> {
-            depSet.add(project.getDependencies().create("org.evosuite:evosuite-master:" + extension.getToolVersion()));
+            String depGav = "org.evosuite:evosuite-master:" + extension.getToolVersion();
+            Dependency dep = project.getDependencies().create(depGav);
+            depSet.add(dep);
         });
 
         createSourceSet();
@@ -67,7 +70,9 @@ public class EvoSuitePlugin implements Plugin<Project> {
         createTasks();
 
         project.getConfigurations().getByName(sourceSet.getCompileConfigurationName()).defaultDependencies(depSet -> {
-            depSet.add(project.getDependencies().create("org.evosuite:evosuite-client:" + extension.getToolVersion()));
+            String depGav = "org.evosuite:evosuite-client:" + extension.getToolVersion();
+            Dependency dep = project.getDependencies().create(depGav);
+            depSet.add(dep);
         });
 
         // TODO detect IDE plugins (even if applied later) and add sourceSet to IDE config

@@ -3,6 +3,7 @@ package com.github.cseppento.gradle.evosuite.testhelper;
 import com.google.common.base.Preconditions;
 import com.google.common.io.Resources;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.*;
@@ -10,7 +11,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Objects;
 
 /**
- * Created by Lajos on 02/07/2017.
+ * The purpose of this class is to parse and copy test projects (which are inputs for test cases).
  */
 public class TestProject {
     private final Path projectDir;
@@ -34,7 +35,7 @@ public class TestProject {
             // used when test was started inside an IDE
             Path dir = Paths.get("test-projects/simple").toAbsolutePath();
 
-            if (Files.isDirectory(dir)) {
+            if (dir.toFile().isDirectory()) {
                 return dir;
             } else {
                 String msg = String.format("Could not get project dir for '%s'. %s is not a directory and %s",
@@ -54,7 +55,8 @@ public class TestProject {
 
     private void copy(Path target, boolean includeGeneratedTests) throws IOException {
         Objects.requireNonNull(target);
-        Preconditions.checkArgument(!Files.exists(target) || Files.isDirectory(target),
+        File targetAsFile = target.toFile();
+        Preconditions.checkArgument(!targetAsFile.exists() || targetAsFile.isDirectory(),
                 "The target already exists and it is not a directory: %s", target);
 
         Files.walkFileTree(projectDir, new SimpleFileVisitor<Path>() {
