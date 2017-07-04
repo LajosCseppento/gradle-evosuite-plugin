@@ -1,6 +1,8 @@
 package com.github.cseppento.gradle.evosuite;
 
 import com.github.cseppento.gradle.evosuite.internal.DefaultEvoSuiteExtension;
+import com.github.cseppento.gradle.evosuite.tasks.EvoSuiteHelp;
+import com.github.cseppento.gradle.evosuite.tasks.EvoSuiteParameters;
 import org.gradle.api.GradleException;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
@@ -84,8 +86,16 @@ public class EvoSuitePlugin implements Plugin<Project> {
 
     private void createTasks() {
         // TODO task evosuiteListClasses
-        // TODO task evosuiteHelp
-        // TODO task evosuiteParameters
+
+        tasks.create("evosuiteHelp", EvoSuiteHelp.class, task -> {
+            task.setGroup("EvoSuite");
+            task.setDescription("Displays EvoSuite help.");
+        });
+
+        tasks.create("evosuiteParameters", EvoSuiteParameters.class, task -> {
+            task.setGroup("EvoSuite");
+            task.setDescription("Displays EvoSuite parameters.");
+        });
 
         // Task: evosuiteGenerateTests : JavaExec
         JavaExec genTask = tasks.create("evosuiteGenerateTests", JavaExec.class);
