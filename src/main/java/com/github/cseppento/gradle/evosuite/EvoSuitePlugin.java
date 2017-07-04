@@ -17,9 +17,10 @@ import java.util.Objects;
  */
 public class EvoSuitePlugin implements Plugin<Project> {
     private static final String DEFAULT_TOOL_VERSION = "1.0.5";
+    private static final String DEFAULT_TOOL_MAIN_CLASS_NAME = "org.evosuite.EvoSuite";
 
-    private static final String EXTENSION_NAME = "evosuite";
-    private static final String TEST_GENERATION_CONFIG_NAME = "evosuiteGeneration";
+    public static final String EXTENSION_NAME = "evosuite";
+    public static final String TEST_GENERATION_CONFIG_NAME = "evosuiteGeneration";
     private static final String SOURCE_SET_NAME = "evosuiteTest";
     private static final String SOURCE_SET_DIR_NAME = "evoTest";
 
@@ -52,7 +53,7 @@ public class EvoSuitePlugin implements Plugin<Project> {
 
         extension = project.getExtensions().create(
                 EvoSuiteExtension.class, EXTENSION_NAME, DefaultEvoSuiteExtension.class,
-                project, DEFAULT_TOOL_VERSION);
+                project, DEFAULT_TOOL_VERSION, DEFAULT_TOOL_MAIN_CLASS_NAME);
 
         evosuiteGenerateConfig = project.getConfigurations().create(TEST_GENERATION_CONFIG_NAME);
         evosuiteGenerateConfig.defaultDependencies(depSet -> {

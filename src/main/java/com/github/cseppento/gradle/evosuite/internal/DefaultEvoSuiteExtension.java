@@ -11,13 +11,16 @@ import java.util.Objects;
 public class DefaultEvoSuiteExtension implements EvoSuiteExtension {
     private final Project project;
     private String toolVersion;
+    private String toolMainClassName;
 
-    public DefaultEvoSuiteExtension(Project project, String toolVersion) {
+    public DefaultEvoSuiteExtension(Project project, String toolVersion, String toolMainClassName) {
         Objects.requireNonNull(project);
         Objects.requireNonNull(toolVersion);
+        Objects.requireNonNull(toolMainClassName);
 
         this.project = project;
         this.toolVersion = toolVersion;
+        this.toolMainClassName = toolMainClassName;
     }
 
     @Override
@@ -29,5 +32,16 @@ public class DefaultEvoSuiteExtension implements EvoSuiteExtension {
     public void setToolVersion(String toolVersion) {
         Objects.requireNonNull(toolVersion);
         this.toolVersion = toolVersion;
+    }
+
+    @Override
+    public String getToolMainClassName() {
+        return toolMainClassName;
+    }
+
+    @Override
+    public void setToolMainClassName(String toolMainClassName) {
+        Objects.requireNonNull(toolMainClassName);
+        this.toolMainClassName = toolMainClassName;
     }
 }

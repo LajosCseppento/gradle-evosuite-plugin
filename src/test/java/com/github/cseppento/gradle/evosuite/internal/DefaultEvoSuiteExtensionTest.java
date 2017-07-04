@@ -20,7 +20,7 @@ public class DefaultEvoSuiteExtensionTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        sut = new DefaultEvoSuiteExtension(project, "DEFAULT_VER");
+        sut = new DefaultEvoSuiteExtension(project, "DEFAULT_VER", "DEFAULT_MAIN");
     }
 
     @Test

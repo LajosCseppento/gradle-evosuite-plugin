@@ -13,4 +13,8 @@ public interface EvoSuiteExtension {
      * @param toolVersion Version of Evosuite to use
      */
     void setToolVersion(String toolVersion);
+
+    String getToolMainClassName();
+
+    void setToolMainClassName(String toolMainClassName);
 }
