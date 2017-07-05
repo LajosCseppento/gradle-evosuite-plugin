@@ -1,0 +1,14 @@
+configurations { codacy }
+
+dependencies {
+    codacy 'com.codacy:codacy-coverage-reporter:2.0.0'
+}
+
+task codacyCoverageUpload(type: JavaExec, dependsOn: jacocoTestReport) {
+    classpath = configurations.codacy
+    main 'com.codacy.CodacyCoverageReporter'
+    args = [
+            '--language', 'Java',
+            '--coverageReport', tasks.jacocoTestReport.reports.xml.destination
+    ]
+}

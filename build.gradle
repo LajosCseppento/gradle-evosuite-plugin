@@ -30,6 +30,8 @@ apply plugin: 'java-gradle-plugin'
 apply from: "${project.rootDir}/gradle/artifacts.gradle"
 apply from: "${project.rootDir}/gradle/testing.gradle"
 apply from: "${project.rootDir}/gradle/ide.gradle"
+
+apply from: "${project.rootDir}/gradle/codacy.gradle"
 apply from: "${project.rootDir}/gradle/sonar.gradle"
 
 project.sourceCompatibility = 1.8
